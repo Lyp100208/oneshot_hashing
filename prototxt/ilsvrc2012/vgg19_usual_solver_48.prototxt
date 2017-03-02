@@ -1,0 +1,23 @@
+net: "./prototxt/ilsvrc2012/vgg19_usual_train_48.prototxt"
+#test_iter: 40
+#test_interval: 100
+base_lr: 0.001
+momentum: 0.9
+weight_decay: 0.0005
+lr_policy: "step"
+gamma: 0.1
+stepsize: 60000
+display: 10
+max_iter: 200000
+snapshot: 20000
+snapshot_prefix: "./snapshot/ilsvrc2012/vgg19_usual_48/vgg19_usual48"
+solver_mode: GPU
+info {
+  type: "weight"
+  interval: 10
+}
+info {
+  type: "mean_train_loss"
+  interval: 10
+}
+

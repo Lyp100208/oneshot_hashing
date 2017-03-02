@@ -1,0 +1,127 @@
+##########################################cifar100#############################################
+##map 算法1：
+usual_48: 0.581945879389
+all_48: 0.520671095999
+usual_48_oneshot: 0.14123492063，用usual_48的模型对oneshot数据 进行hashing，计算的map
+support_oneshot_fine_48: 0.269087698413
+
+
+##########################################cifar100#############################################
+
+##map
+
+usual_48: 0.660686378505
+all_48: 0.607117241076
+all_oneshot_48: 0.71305704283: 所有100类数据训练的模型对20oneshot的map
+usual_48_oneshot: 0.241561072562
+
+usual_and_oneshot: 0.242224816785:,0.244177329205  用80和20oneshot训练的模型对20oneshot的map,作为baseline
+
+usual_and_oneshot: 0.653454754882:用80usual和20oneshot训练的模型对80usual的map
+
+support_oneshot_fine_48: 加对support data 的"full menmory", stepsize=60000: 0.382815782471 ,0.387461321316  ,stepsize30000: 0.355546643757,0.359713775392
+support_oneshot_fine_48: 0.36  ,inv
+
+support_oneshot_fine1_48: 所有 time steps 的output 求平均作为 oneshot的特征输出 ，0.37418287062
+support_oneshot_fine_bilstm_48: 加双向lstm 不共享参数：0.345980369097
+support_oneshot_fine_bilstms_48: bilstm共享参数： 0.370781405416
+support_oneshot_fine_2lstm_48: 2层lstm 0.383876055393
+
+
+support_learnt_48: 学习网络的记忆功能 learnt network,10类learnt数据的map 0.814739410668
+support_learning_from_learnt_48: map: 0.447453333889
+support_learning_48: 利用support_oneshot_fine_48的模型对learning数据进行的map：0.422726364631,0.418964896743
+support_learning_fine_48: 与support_oneshot_fine_48类似，不过训练数据换成了train_learning,也就是说仅仅减少了记忆网络的作用, 最后 learning的map为： 0.420094444478 ，比0.447453333889小，说明有效果
+
+0.38
+0.38
+
+
+
+
+
+
+
+###########################################ilsvrc2012#########################################
+##map
+
+usual_48: 0.627534944803,0.631633999419
+usual_and_oneshot_48: 对oneshot: 0.221228645885,作为baseline
+usual_and_oneshot_48: 对 usual: 0.626303137863
+support_oneshot_fine_48: stepsize30000: 0.3516802729 stepsize60000: 0.349985668499
+support_oneshot_fine_bilstm_48: 双向Lstm,共享参数： 0.367848560812, 0.370531218705
+support_oneshot_fine_bilstm_48:双向lstm,不共享参数：0.359048372168, 0.358469621827
+support_oneshot_fine_2lstm_48:双层单向lstm 0.376288614309,0.374862418939
+support_oneshot_fine_bilstm*2_48: 0.411408239039,0.409922066221
+
+support_oneshot_fine_48_m:均值文件换成了imagenet_mean.binaryproto,stepsize60000 0.349103733209,0.35012207291,0.353785635709
+support_oneshot_fine_bilstm__m_48:0.368975690522, 0.370677190788
+
+
+
+
+
+
+###########################googlenet-cifar100#######################
+
+googlenet_usual_48:
+    iter=140000 stepsize=60000 learning_rate=0.001  MAP=0.732794992478
+    iter=80000 stepsize=60000 learning_rate=0.001 MAP=0.728328421996
+    iter=180000 stepsize=60000 learning_rate=0.001 MAP=0.733311974902
+    iter=200000 stepsize=60000 learning_rate=0.001 MAP=0.73143774619,0.736099842325
+
+googlenet_usual90_and_learning_48: 对learning_query:
+    iter=200000  stepsize=60000 learning_rate=0.001  MAP=0.410314061085
+    iter=180000  stepsize=60000 learning_rate=0.001  MAP=0.406377984798
+
+googlenet_learning_ft_on_usual90_48:对learning_db和learning_query:
+    MAP=0.468119447312
+
+
+googlenet_support40_learnt_bilstm_48:
+    iter=200000 stepsize=30000 learning_rate=0.01  MAP=0.948197202304
+    iter=200000 stepsize=60000 learning_rate=0.001 MAP=0.945870876647
+
+
+
+
+###########################googlenet-ilsvrc2012####################
+ITQ:
+    MAP=0.5650
+
+googlenet_usual_48:
+    iter=30000 stepsize=60000 learning_rate=0.001 MAP=0.883146945283
+    iter=100000 stepsize=60000 learning_rate=0.001 MAP=0.879027360002
+    iter=180000 stepsize=180000 learning_rate=0.001 MAP=0.878837373069
+
+googlenet_usual90_and_learning_48: 对learning_query和learning_db
+    iter=200000 stepsize=60000 learning_rate=0.001  MAP=0.564220129818
+
+googlenet_learning_ft_on_usual90_48:
+    map: 0.645082098248
+
+googlenet_support40_learnt_bilstm_48: 对learnt
+    iter=200000  stepsize=30000 learning_rate=0.01 MAP=0.964349274708
+    iter=200000 stepsize=60000 learning_rate=0.001 MAP=0.972097841617 
+    ITQ:0.8779
+
+
+googlenet_learning_ft_on_learnt_48: 对learning_query和learning_db
+    iter=6000 stepsize=6000 learning_rate=0.0001 MAP: 0.597706776316
+
+
+
+#############################googlenet-sun397###########################
+
+googlenet_usual43_48:
+    iter=60000 stepsize=20000 learning_rate=0.001 MAP=0.82403232461
+
+googlenet_usual43_and_learning_48:
+    
+   iter=120000 stepsize=30000 learning_rate=0.001 对learning: MAP=0.686947442431  对usual43: MAP=0.837693534673
+
+
+googlenet_learning_ft_on_usual43_48：
+    iter=6000 stepsize=6000 learning_rate=0.00001 MAP=0.700276646313
+
+

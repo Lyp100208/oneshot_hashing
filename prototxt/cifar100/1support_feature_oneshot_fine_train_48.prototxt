@@ -1,0 +1,66 @@
+name: "Oneshot"
+
+##############################DATA####################################
+
+layer {
+  name: "support_f"
+  type: "Data"
+  top: "support_feature"
+#top: "label_1"
+  data_param {
+    source: "data/cifar100/support_train_lmdb/feature"
+    batch_size: 80
+    backend: LMDB
+  }
+    include {
+      phase: TRAIN
+   }
+}
+
+
+layer {
+  name: "support_f"
+  type: "Data"
+  top: "support_feature"
+#top: "label_1"
+  data_param {
+    source: "data/cifar100/support_test_lmdb/feature"
+    batch_size: 80
+    backend: LMDB
+  }
+    include {
+      phase: TEST
+   }
+}
+
+layer {
+  name: "Support_i"
+  type: "Data"
+  top: "indicator_"
+#top: "label_i2"
+  data_param {
+    source: "data/cifar100/support_train_lmdb/indicator"
+    batch_size: 80
+    backend: LMDB
+   }
+        include{
+phase: TRAIN
+
+        }
+}
+layer {
+  name: "Support_i"
+  type: "Data"
+  top: "indicator_"
+#top: "label_i2"
+  data_param {
+    source: "data/cifar100/support_test_lmdb/indicator"
+    batch_size: 80
+    backend: LMDB
+   }
+        include{
+phase: TEST
+
+        }
+}
+

@@ -1,0 +1,6 @@
+usual_train_48.prototxt: 100类里面的80类进行训练,48bit
+oneshot_train_48.prototxt：对20oneshot训练，不过在80类的基础上进行微调
+48.prototxt:对100类数据进行训练
+support_oneshot_fine_solver_48.prototxt: 利用80类的数据对20类数据进行训练，利用单向lstm，lstm放到pool4后面
+support_oneshot_fine1_solver_48.prototxt:跟4一样，不同的是：在lstm后，取的是80个time step 的平均值
+usual_and_oneshot_train_48.prototxt:将80类的usual和20类的oneshot一块训练

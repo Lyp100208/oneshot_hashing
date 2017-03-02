@@ -1,0 +1,2860 @@
+name: "Oneshot"
+
+##############################DATA####################################
+layer {
+  name: "Oneshot"
+  type: "HashData"
+  top: "data"
+  top: "label"
+  hash_data_param {
+    source: "./data/cifar100/train_learnt.txt"
+    shuffle: true
+    batch_size: 100 #200
+    new_height: 256
+    new_width: 256
+  }
+  transform_param {
+    mirror: true
+    crop_size: 224
+    mean_value: 104
+    mean_value: 117
+    mean_value: 123
+  }
+  include {
+     phase: TRAIN 
+  }
+}
+
+layer {
+  name: "Oneshot"
+  type: "HashData"
+  top: "data"
+  top: "label"
+  hash_data_param {
+    source: "./data/cifar100/test_learnt.txt"
+    shuffle: true
+    batch_size: 100 #200
+    new_height: 256
+    new_width: 256
+  }
+  transform_param {
+    mirror: true
+    crop_size: 224
+    mean_value: 104
+    mean_value: 117
+    mean_value: 123
+  }
+  include {
+     phase: TEST 
+  }
+}
+
+layer {
+  name: "Support"
+  type: "OneshotData"
+  top: "support_data"
+  top: "indicator"
+  oneshot_data_param {
+    source: "data/cifar100/support.txt"
+    batch_size: 80
+    new_height: 256
+    new_width: 256
+    shuffle: true
+    is_color: true
+    label_size: 1
+   }
+  transform_param {
+    mirror: true
+    crop_size: 224
+    mean_value: 104
+    mean_value: 117
+    mean_value: 123
+    }
+  #include {
+     #phase: TRAIN 
+  #}
+}
+
+
+#################################CNN1-data##################################
+
+layer {
+  name: "conv1"
+  type: "Convolution"
+  bottom: "data"
+  top: "conv1"
+  param {
+    name: "conv1_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv1_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1"
+  type: "ReLU"
+  bottom: "conv1"
+  top: "conv1"
+}
+layer {
+  name: "cccp1"
+  type: "Convolution"
+  bottom: "conv1"
+  top: "cccp1"
+  param {
+    name: "cccp1_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp1_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu2"
+  type: "ReLU"
+  bottom: "cccp1"
+  top: "cccp1"
+}
+layer {
+  name: "pool1"
+  type: "Pooling"
+  bottom: "cccp1"
+  top: "pool1"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "drop1"
+  type: "Dropout"
+  bottom: "pool1"
+  top: "pool1"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "conv2"
+  type: "Convolution"
+  bottom: "pool1"
+  top: "conv2"
+  param {
+    name: "conv2_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv2_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv2"
+  top: "conv2"
+}
+layer {
+  name: "cccp3"
+  type: "Convolution"
+  bottom: "conv2"
+  top: "cccp3"
+  param {
+    name: "cccp3_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp3_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu5"
+  type: "ReLU"
+  bottom: "cccp3"
+  top: "cccp3"
+}
+layer {
+  name: "pool2"
+  type: "Pooling"
+  bottom: "cccp3"
+  top: "pool2"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3"
+  type: "Convolution"
+  bottom: "pool2"
+  top: "conv3"
+  param {
+    name: "conv3_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv3_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "conv3"
+  top: "conv3"
+}
+layer {
+  name: "cccp5"
+  type: "Convolution"
+  bottom: "conv3"
+  top: "cccp5"
+  param {
+    name: "cccp5_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp5_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu8"
+  type: "ReLU"
+  bottom: "cccp5"
+  top: "cccp5"
+}
+layer {
+  name: "pool3"
+  type: "Pooling"
+  bottom: "cccp5"
+  top: "pool3"
+  pooling_param {
+    pool: AVE
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "drop3"
+  type: "Dropout"
+  bottom: "pool3"
+  top: "pool3"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "conv4"
+  type: "Convolution"
+  bottom: "pool3"
+  top: "conv4"
+  param {
+    name: "conv4_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv4_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 1024
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu10"
+  type: "ReLU"
+  bottom: "conv4"
+  top: "conv4"
+}
+layer {
+  name: "cccp7"
+  type: "Convolution"
+  bottom: "conv4"
+  top: "cccp7"
+  param {
+    name: "cccp7_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp7_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 1200
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu11"
+  type: "ReLU"
+  bottom: "cccp7"
+  top: "cccp7"
+}
+layer {
+  name: "pool4"
+  type: "Pooling"
+  bottom: "cccp7"
+  top: "pool4"
+  pooling_param {
+    pool: AVE
+    kernel_size: 6
+    stride: 1
+  }
+}
+
+############################CNN2-support########################################
+
+layer {
+  name: "conv1_s"
+  type: "Convolution"
+  bottom: "support_data"
+  top: "conv1_s"
+  param {
+    name: "conv1_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv1_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 11
+    stride: 4
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu1_s"
+  type: "ReLU"
+  bottom: "conv1_s"
+  top: "conv1_s"
+}
+layer {
+  name: "cccp1_s"
+  type: "Convolution"
+  bottom: "conv1_s"
+  top: "cccp1_s"
+  param {
+    name: "cccp1_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp1_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 96
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu2_s"
+  type: "ReLU"
+  bottom: "cccp1_s"
+  top: "cccp1_s"
+}
+layer {
+  name: "pool1_s"
+  type: "Pooling"
+  bottom: "cccp1_s"
+  top: "pool1_s"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "drop1_s"
+  type: "Dropout"
+  bottom: "pool1_s"
+  top: "pool1_s"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "conv2_s"
+  type: "Convolution"
+  bottom: "pool1_s"
+  top: "conv2_s"
+  param {
+    name: "conv2_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv2_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    pad: 2
+    kernel_size: 5
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu4"
+  type: "ReLU"
+  bottom: "conv2_s"
+  top: "conv2_s"
+}
+layer {
+  name: "cccp3_s"
+  type: "Convolution"
+  bottom: "conv2_s"
+  top: "cccp3_s"
+  param {
+    name: "cccp3_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp3_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 256
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu5_s"
+  type: "ReLU"
+  bottom: "cccp3_s"
+  top: "cccp3_s"
+}
+layer {
+  name: "pool2_s"
+  type: "Pooling"
+  bottom: "cccp3_s"
+  top: "pool2_s"
+  pooling_param {
+    pool: MAX
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "conv3_s"
+  type: "Convolution"
+  bottom: "pool2_s"
+  top: "conv3_s"
+  param {
+    name: "conv3_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv3_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    pad: 1
+    kernel_size: 3
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu7"
+  type: "ReLU"
+  bottom: "conv3_s"
+  top: "conv3_s"
+}
+layer {
+  name: "cccp5_s"
+  type: "Convolution"
+  bottom: "conv3_s"
+  top: "cccp5_s"
+  param {
+    name: "cccp5_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp5_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 384
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu8_s"
+  type: "ReLU"
+  bottom: "cccp5_s"
+  top: "cccp5_s"
+}
+layer {
+  name: "pool3_s"
+  type: "Pooling"
+  bottom: "cccp5_s"
+  top: "pool3_s"
+  pooling_param {
+    pool: AVE
+    kernel_size: 3
+    stride: 2
+  }
+}
+layer {
+  name: "drop3_s"
+  type: "Dropout"
+  bottom: "pool3_s"
+  top: "pool3_s"
+  dropout_param {
+    dropout_ratio: 0.5
+  }
+}
+layer {
+  name: "conv4_s"
+  type: "Convolution"
+  bottom: "pool3_s"
+  top: "conv4_s"
+  param {
+    name: "conv4_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "conv4_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 1024
+    pad: 1
+    kernel_size: 3
+    stride: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.01
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu10_s"
+  type: "ReLU"
+  bottom: "conv4_s"
+  top: "conv4_s"
+}
+layer {
+  name: "cccp7_s"
+  type: "Convolution"
+  bottom: "conv4_s"
+  top: "cccp7_s"
+  param {
+    name: "cccp7_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "cccp7_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  convolution_param {
+    num_output: 1200
+    kernel_size: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.05
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+layer {
+  name: "relu11_s"
+  type: "ReLU"
+  bottom: "cccp7_s"
+  top: "cccp7_s"
+}
+layer {
+  name: "pool4_s"
+  type: "Pooling"
+  bottom: "cccp7_s"
+  top: "pool4_s"
+  pooling_param {
+    pool: AVE
+    kernel_size: 6
+    stride: 1
+  }
+}
+
+##############################################################################
+
+
+
+################3## pool4  pool4_s  :  batch_size* 1200#######################
+
+
+
+
+######################### reshape ################################
+
+
+
+layer {
+  name: "reshape"
+  type: "Reshape"
+  bottom: "pool4"
+  top: "embedded"
+  reshape_param {
+    shape {
+      dim: 0  
+      dim: 1
+      dim: -1
+      dim: 0 
+    }
+  }
+}
+
+
+layer {
+  name: "reshape_s"
+  type: "Reshape"
+  bottom: "pool4_s"
+  top: "embedded_s"
+  reshape_param {
+    shape {
+      dim: 0  
+      dim: 1
+      dim: -1
+      dim: 0 # infer it from the other dimensions
+    }
+  }
+}
+
+
+layer {
+  name: "concat_embedded_s"
+  type: "Concat"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+   bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  bottom: "embedded_s"
+  top: "concat_emdedded_s"
+  concat_param {
+    axis: 1
+  }
+}
+
+
+layer {
+  name: "concat_indicator"
+  type: "Concat"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+    bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  bottom: "indicator"
+  top: "concat_indicator"
+  concat_param {
+    axis: 1
+  }
+}
+
+
+### concat_emdedded_s: 80*40*1200*1
+### concat_indicator:80*40
+
+
+########################### lstm1 ###############################
+
+layer {
+  name: "lstm1"
+  type: "LSTM"
+  bottom: "concat_emdedded_s"
+  bottom: "concat_indicator"
+  bottom: "embedded"
+  top: "lstm1"
+
+  param {
+    name: "lstm1_w"
+    lr_mult: 1
+  }
+  recurrent_param {
+    num_output: 1200
+    weight_filler {
+      type: "uniform"
+      min: -0.08
+      max: 0.08
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+layer {
+  name: "lstm2"
+  type: "LSTM"
+  bottom: "lstm1"
+  bottom: "concat_indicator"
+  top: "lstm2"
+
+  param {
+    name: "lstm2_w"
+    lr_mult: 1
+  }
+  recurrent_param {
+    num_output: 1200
+    weight_filler {
+      type: "uniform"
+      min: -0.08
+      max: 0.08
+    }
+    bias_filler {
+      type: "constant"
+      value: 0
+    }
+  }
+}
+
+## last time step
+layer {
+  name: "slice_b"
+  type: "Slice"
+  bottom: "lstm2"
+  top: "h79"
+  top: "h80"
+  slice_param {
+    slice_dim: 0
+    slice_point: 79
+
+  }
+}
+layer {
+  name: "reduction_h79"
+  bottom: "h79"
+  top: "reduction_h79"
+  type: "Reduction"
+  reduction_param {
+    axis: 0
+  }
+}
+
+layer {
+  name: "reshape_h80"
+  type: "Reshape"
+  bottom: "h80"
+  top: "oneshot_data_"
+  reshape_param {
+    shape {
+      dim: -1  
+      dim: 1
+      dim: 0
+      dim: 1 # infer it from the other dimensions
+    }
+  }
+}
+layer {
+  name: "reshape_oneshot_data_"
+  type: "Reshape"
+  bottom: "oneshot_data_"
+  top: "oneshot_data"
+  reshape_param {
+    shape {
+      dim: 0  
+      dim: -1
+      dim: 1
+      dim: 1 # infer it from the other dimensions
+    }
+  }
+}
+
+#####oneshot_data:40*1200*1*1
+
+##############################################################################
+layer {
+  name: "split_pair_s"
+  type: "Slice"
+  bottom: "oneshot_data"
+  top: "slice_s1"
+  top: "slice_s2"
+  top: "slice_s3"
+  top: "slice_s4"
+  top: "slice_s5"
+  top: "slice_s6"
+  top: "slice_s7"
+  top: "slice_s8"
+  top: "slice_s9"
+  top: "slice_s10"
+  top: "slice_s11"
+  top: "slice_s12"
+  top: "slice_s13"
+  top: "slice_s14"
+  top: "slice_s15"
+  top: "slice_s16"
+  top: "slice_s17"
+  top: "slice_s18"
+  top: "slice_s19"
+  top: "slice_s20"
+  top: "slice_s21"
+  top: "slice_s22"
+  top: "slice_s23"
+  top: "slice_s24"
+
+  top: "slice_s25"
+  top: "slice_s26"
+  top: "slice_s27"
+  top: "slice_s28"
+  top: "slice_s29"
+  top: "slice_s30"
+  top: "slice_s31"
+  top: "slice_s32"
+  top: "slice_s33"
+  top: "slice_s34"
+  top: "slice_s35"
+  top: "slice_s36"
+  top: "slice_s37"
+  top: "slice_s38"
+  top: "slice_s39"
+  top: "slice_s40"
+  top: "slice_s41"
+  top: "slice_s42"
+  top: "slice_s43"
+  top: "slice_s44"
+  top: "slice_s45"
+  top: "slice_s46"
+  top: "slice_s47"
+  top: "slice_s48"
+
+  slice_param {
+    slice_dim: 1
+    slice_point: 25
+    slice_point: 50
+    slice_point: 75
+    slice_point: 100
+    slice_point: 125
+    slice_point: 150
+    slice_point: 175
+    slice_point: 200
+    slice_point: 225
+    slice_point: 250
+    slice_point: 275
+    slice_point: 300
+    slice_point: 325
+    slice_point: 350
+    slice_point: 375
+    slice_point: 400
+    slice_point: 425
+    slice_point: 450
+    slice_point: 475
+    slice_point: 500
+    slice_point: 525
+    slice_point: 550
+    slice_point: 575
+    slice_point: 600
+    slice_point: 625
+    slice_point: 650
+    slice_point: 675
+    slice_point: 700
+    slice_point: 725
+    slice_point: 750
+    slice_point: 775
+    slice_point: 800
+    slice_point: 825
+    slice_point: 850
+    slice_point: 875
+    slice_point: 900
+    slice_point: 925
+    slice_point: 950
+    slice_point: 975
+    slice_point: 1000
+    slice_point: 1025
+    slice_point: 1050
+    slice_point: 1075
+    slice_point: 1100
+    slice_point: 1125
+    slice_point: 1150
+    slice_point: 1175
+  }
+}
+#########################################
+layer {
+  name: "ip_s1"
+  type: "InnerProduct"
+  bottom: "slice_s1"
+  top: "hash_s1"
+  param {
+    name: "ip1_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip1_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s1"
+  type: "Sigmoid"
+  bottom: "hash_s1"
+  top: "hash_s1"
+}
+layer {
+  name: "ip_s2"
+  type: "InnerProduct"
+  bottom: "slice_s2"
+  top: "hash_s2"
+  param {
+    name: "ip2_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip2_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s2"
+  type: "Sigmoid"
+  bottom: "hash_s2"
+  top: "hash_s2"
+}
+layer {
+  name: "ip_s3"
+  type: "InnerProduct"
+  bottom: "slice_s3"
+  top: "hash_s3"
+  param {
+    name: "ip3_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip3_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s3"
+  type: "Sigmoid"
+  bottom: "hash_s3"
+  top: "hash_s3"
+}
+layer {
+  name: "ip_s4"
+  type: "InnerProduct"
+  bottom: "slice_s4"
+  top: "hash_s4"
+  param {
+    name: "ip4_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip4_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s4"
+  type: "Sigmoid"
+  bottom: "hash_s4"
+  top: "hash_s4"
+}
+layer {
+  name: "ip_s5"
+  type: "InnerProduct"
+  bottom: "slice_s5"
+  top: "hash_s5"
+  param {
+    name: "ip5_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip5_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s5"
+  type: "Sigmoid"
+  bottom: "hash_s5"
+  top: "hash_s5"
+}
+layer {
+  name: "ip_s6"
+  type: "InnerProduct"
+  bottom: "slice_s6"
+  top: "hash_s6"
+  param {
+    name: "ip6_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip6_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s6"
+  type: "Sigmoid"
+  bottom: "hash_s6"
+  top: "hash_s6"
+}
+layer {
+  name: "ip_s7"
+  type: "InnerProduct"
+  bottom: "slice_s7"
+  top: "hash_s7"
+  param {
+    name: "ip7_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip7_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s7"
+  type: "Sigmoid"
+  bottom: "hash_s7"
+  top: "hash_s7"
+}
+layer {
+  name: "ip_s8"
+  type: "InnerProduct"
+  bottom: "slice_s8"
+  top: "hash_s8"
+  param {
+    name: "ip8_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip8_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s8"
+  type: "Sigmoid"
+  bottom: "hash_s8"
+  top: "hash_s8"
+}
+layer {
+  name: "ip_s9"
+  type: "InnerProduct"
+  bottom: "slice_s9"
+  top: "hash_s9"
+  param {
+    name: "ip9_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip9_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s9"
+  type: "Sigmoid"
+  bottom: "hash_s9"
+  top: "hash_s9"
+}
+layer {
+  name: "ip_s10"
+  type: "InnerProduct"
+  bottom: "slice_s10"
+  top: "hash_s10"
+  param {
+    name: "ip10_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip10_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s10"
+  type: "Sigmoid"
+  bottom: "hash_s10"
+  top: "hash_s10"
+}
+layer {
+  name: "ip_s11"
+  type: "InnerProduct"
+  bottom: "slice_s11"
+  top: "hash_s11"
+  param {
+    name: "ip11_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip11_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s11"
+  type: "Sigmoid"
+  bottom: "hash_s11"
+  top: "hash_s11"
+}
+layer {
+  name: "ip_s12"
+  type: "InnerProduct"
+  bottom: "slice_s12"
+  top: "hash_s12"
+  param {
+    name: "ip12_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip12_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s12"
+  type: "Sigmoid"
+  bottom: "hash_s12"
+  top: "hash_s12"
+}
+layer {
+  name: "ip_s13"
+  type: "InnerProduct"
+  bottom: "slice_s13"
+  top: "hash_s13"
+  param {
+    name: "ip13_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip13_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s13"
+  type: "Sigmoid"
+  bottom: "hash_s13"
+  top: "hash_s13"
+}
+layer {
+  name: "ip_s14"
+  type: "InnerProduct"
+  bottom: "slice_s14"
+  top: "hash_s14"
+  param {
+    name: "ip14_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip14_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s14"
+  type: "Sigmoid"
+  bottom: "hash_s14"
+  top: "hash_s14"
+}
+layer {
+  name: "ip_s15"
+  type: "InnerProduct"
+  bottom: "slice_s15"
+  top: "hash_s15"
+  param {
+    name: "ip15_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip15_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s15"
+  type: "Sigmoid"
+  bottom: "hash_s15"
+  top: "hash_s15"
+}
+layer {
+  name: "ip_s16"
+  type: "InnerProduct"
+  bottom: "slice_s16"
+  top: "hash_s16"
+  param {
+    name: "ip16_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip16_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s16"
+  type: "Sigmoid"
+  bottom: "hash_s16"
+  top: "hash_s16"
+}
+layer {
+  name: "ip_s17"
+  type: "InnerProduct"
+  bottom: "slice_s17"
+  top: "hash_s17"
+  param {
+    name: "ip17_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip17_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s17"
+  type: "Sigmoid"
+  bottom: "hash_s17"
+  top: "hash_s17"
+}
+layer {
+  name: "ip_s18"
+  type: "InnerProduct"
+  bottom: "slice_s18"
+  top: "hash_s18"
+  param {
+    name: "ip18_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip18_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s18"
+  type: "Sigmoid"
+  bottom: "hash_s18"
+  top: "hash_s18"
+}
+layer {
+  name: "ip_s19"
+  type: "InnerProduct"
+  bottom: "slice_s19"
+  top: "hash_s19"
+  param {
+    name: "ip19_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip19_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s19"
+  type: "Sigmoid"
+  bottom: "hash_s19"
+  top: "hash_s19"
+}
+layer {
+  name: "ip_s20"
+  type: "InnerProduct"
+  bottom: "slice_s20"
+  top: "hash_s20"
+  param {
+    name: "ip20_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip20_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s20"
+  type: "Sigmoid"
+  bottom: "hash_s20"
+  top: "hash_s20"
+}
+layer {
+  name: "ip_s21"
+  type: "InnerProduct"
+  bottom: "slice_s21"
+  top: "hash_s21"
+  param {
+    name: "ip21_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip21_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s21"
+  type: "Sigmoid"
+  bottom: "hash_s21"
+  top: "hash_s21"
+}
+layer {
+  name: "ip_s22"
+  type: "InnerProduct"
+  bottom: "slice_s22"
+  top: "hash_s22"
+  param {
+    name: "ip22_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip22_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s22"
+  type: "Sigmoid"
+  bottom: "hash_s22"
+  top: "hash_s22"
+}
+layer {
+  name: "ip_s23"
+  type: "InnerProduct"
+  bottom: "slice_s23"
+  top: "hash_s23"
+  param {
+    name: "ip23_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip23_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s23"
+  type: "Sigmoid"
+  bottom: "hash_s23"
+  top: "hash_s23"
+}
+layer {
+  name: "ip_s24"
+  type: "InnerProduct"
+  bottom: "slice_s24"
+  top: "hash_s24"
+  param {
+    name: "ip24_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip24_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s24"
+  type: "Sigmoid"
+  bottom: "hash_s24"
+  top: "hash_s24"
+}
+
+
+
+#########################################
+layer {
+  name: "ip_s25"
+  type: "InnerProduct"
+  bottom: "slice_s25"
+  top: "hash_s25"
+  param {
+    name: "ip25_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip25_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s25"
+  type: "Sigmoid"
+  bottom: "hash_s25"
+  top: "hash_s25"
+}
+layer {
+  name: "ip_s26"
+  type: "InnerProduct"
+  bottom: "slice_s26"
+  top: "hash_s26"
+  param {
+    name: "ip26_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip26_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s26"
+  type: "Sigmoid"
+  bottom: "hash_s26"
+  top: "hash_s26"
+}
+layer {
+  name: "ip_s27"
+  type: "InnerProduct"
+  bottom: "slice_s27"
+  top: "hash_s27"
+  param {
+    name: "ip27_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip27_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s27"
+  type: "Sigmoid"
+  bottom: "hash_s27"
+  top: "hash_s27"
+}
+layer {
+  name: "ip_s28"
+  type: "InnerProduct"
+  bottom: "slice_s28"
+  top: "hash_s28"
+  param {
+    name: "ip28_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip28_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s28"
+  type: "Sigmoid"
+  bottom: "hash_s28"
+  top: "hash_s28"
+}
+layer {
+  name: "ip_s29"
+  type: "InnerProduct"
+  bottom: "slice_s29"
+  top: "hash_s29"
+  param {
+    name: "ip29_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip29_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s29"
+  type: "Sigmoid"
+  bottom: "hash_s29"
+  top: "hash_s29"
+}
+layer {
+  name: "ip_s30"
+  type: "InnerProduct"
+  bottom: "slice_s30"
+  top: "hash_s30"
+  param {
+    name: "ip30_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip30_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s30"
+  type: "Sigmoid"
+  bottom: "hash_s30"
+  top: "hash_s30"
+}
+layer {
+  name: "ip_s31"
+  type: "InnerProduct"
+  bottom: "slice_s31"
+  top: "hash_s31"
+  param {
+    name: "ip31_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip31_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s31"
+  type: "Sigmoid"
+  bottom: "hash_s31"
+  top: "hash_s31"
+}
+layer {
+  name: "ip_s32"
+  type: "InnerProduct"
+  bottom: "slice_s32"
+  top: "hash_s32"
+  param {
+    name: "ip32_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip32_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s32"
+  type: "Sigmoid"
+  bottom: "hash_s32"
+  top: "hash_s32"
+}
+layer {
+  name: "ip_s33"
+  type: "InnerProduct"
+  bottom: "slice_s33"
+  top: "hash_s33"
+  param {
+    name: "ip33_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip33_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s33"
+  type: "Sigmoid"
+  bottom: "hash_s33"
+  top: "hash_s33"
+}
+layer {
+  name: "ip_s34"
+  type: "InnerProduct"
+  bottom: "slice_s34"
+  top: "hash_s34"
+  param {
+    name: "ip34_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip34_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s34"
+  type: "Sigmoid"
+  bottom: "hash_s34"
+  top: "hash_s34"
+}
+layer {
+  name: "ip_s35"
+  type: "InnerProduct"
+  bottom: "slice_s35"
+  top: "hash_s35"
+  param {
+    name: "ip35_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip35_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s35"
+  type: "Sigmoid"
+  bottom: "hash_s35"
+  top: "hash_s35"
+}
+layer {
+  name: "ip_s36"
+  type: "InnerProduct"
+  bottom: "slice_s36"
+  top: "hash_s36"
+  param {
+    name: "ip36_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip36_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s36"
+  type: "Sigmoid"
+  bottom: "hash_s36"
+  top: "hash_s36"
+}
+layer {
+  name: "ip_s37"
+  type: "InnerProduct"
+  bottom: "slice_s37"
+  top: "hash_s37"
+  param {
+    name: "ip37_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip37_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s37"
+  type: "Sigmoid"
+  bottom: "hash_s37"
+  top: "hash_s37"
+}
+layer {
+  name: "ip_s38"
+  type: "InnerProduct"
+  bottom: "slice_s38"
+  top: "hash_s38"
+  param {
+    name: "ip38_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip38_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s38"
+  type: "Sigmoid"
+  bottom: "hash_s38"
+  top: "hash_s38"
+}
+layer {
+  name: "ip_s39"
+  type: "InnerProduct"
+  bottom: "slice_s39"
+  top: "hash_s39"
+  param {
+    name: "ip39_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip39_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s39"
+  type: "Sigmoid"
+  bottom: "hash_s39"
+  top: "hash_s39"
+}
+layer {
+  name: "ip_s40"
+  type: "InnerProduct"
+  bottom: "slice_s40"
+  top: "hash_s40"
+  param {
+    name: "ip40_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip40_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s40"
+  type: "Sigmoid"
+  bottom: "hash_s40"
+  top: "hash_s40"
+}
+layer {
+  name: "ip_s41"
+  type: "InnerProduct"
+  bottom: "slice_s41"
+  top: "hash_s41"
+  param {
+    name: "ip41_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip41_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s41"
+  type: "Sigmoid"
+  bottom: "hash_s41"
+  top: "hash_s41"
+}
+layer {
+  name: "ip_s42"
+  type: "InnerProduct"
+  bottom: "slice_s42"
+  top: "hash_s42"
+  param {
+    name: "ip42_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip42_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s42"
+  type: "Sigmoid"
+  bottom: "hash_s42"
+  top: "hash_s42"
+}
+layer {
+  name: "ip_s43"
+  type: "InnerProduct"
+  bottom: "slice_s43"
+  top: "hash_s43"
+  param {
+    name: "ip43_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip43_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s43"
+  type: "Sigmoid"
+  bottom: "hash_s43"
+  top: "hash_s43"
+}
+layer {
+  name: "ip_s44"
+  type: "InnerProduct"
+  bottom: "slice_s44"
+  top: "hash_s44"
+  param {
+    name: "ip44_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip44_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s44"
+  type: "Sigmoid"
+  bottom: "hash_s44"
+  top: "hash_s44"
+}
+layer {
+  name: "ip_s45"
+  type: "InnerProduct"
+  bottom: "slice_s45"
+  top: "hash_s45"
+  param {
+    name: "ip45_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip45_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s45"
+  type: "Sigmoid"
+  bottom: "hash_s45"
+  top: "hash_s45"
+}
+layer {
+  name: "ip_s46"
+  type: "InnerProduct"
+  bottom: "slice_s46"
+  top: "hash_s46"
+  param {
+    name: "ip46_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip46_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s46"
+  type: "Sigmoid"
+  bottom: "hash_s46"
+  top: "hash_s46"
+}
+layer {
+  name: "ip_s47"
+  type: "InnerProduct"
+  bottom: "slice_s47"
+  top: "hash_s47"
+  param {
+    name: "ip47_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip47_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s47"
+  type: "Sigmoid"
+  bottom: "hash_s47"
+  top: "hash_s47"
+}
+layer {
+  name: "ip_s48"
+  type: "InnerProduct"
+  bottom: "slice_s48"
+  top: "hash_s48"
+  param {
+    name: "ip48_w"
+    lr_mult: 0
+    decay_mult: 1
+  }
+  param {
+    name: "ip48_b"
+    lr_mult: 0
+    decay_mult: 0
+  }
+  inner_product_param {
+    num_output: 1
+    weight_filler {
+      type: "gaussian"
+      std: 0.5
+    }
+    bias_filler {
+      type: "constant"
+    }
+  }
+}
+layer {
+  name: "sigmoid_hash_s48"
+  type: "Sigmoid"
+  bottom: "hash_s48"
+  top: "hash_s48"
+}
+
+##############################################
+
+layer {
+  name: "concat_pair_s"
+  type: "Concat"
+  bottom: "hash_s1"
+  bottom: "hash_s2"
+  bottom: "hash_s3"
+  bottom: "hash_s4"
+  bottom: "hash_s5"
+  bottom: "hash_s6"
+  bottom: "hash_s7"
+  bottom: "hash_s8"
+  bottom: "hash_s9"
+  bottom: "hash_s10"
+  bottom: "hash_s11"
+  bottom: "hash_s12"
+  bottom: "hash_s13"
+  bottom: "hash_s14"
+  bottom: "hash_s15"
+  bottom: "hash_s16"
+  bottom: "hash_s17"
+  bottom: "hash_s18"
+  bottom: "hash_s19"
+  bottom: "hash_s20"
+  bottom: "hash_s21"
+  bottom: "hash_s22"
+  bottom: "hash_s23"
+  bottom: "hash_s24"
+
+  bottom: "hash_s25"
+  bottom: "hash_s26"
+  bottom: "hash_s27"
+  bottom: "hash_s28"
+  bottom: "hash_s29"
+  bottom: "hash_s30"
+  bottom: "hash_s31"
+  bottom: "hash_s32"
+  bottom: "hash_s33"
+  bottom: "hash_s34"
+  bottom: "hash_s35"
+  bottom: "hash_s36"
+  bottom: "hash_s37"
+  bottom: "hash_s38"
+  bottom: "hash_s39"
+  bottom: "hash_s40"
+  bottom: "hash_s41"
+  bottom: "hash_s42"
+  bottom: "hash_s43"
+  bottom: "hash_s44"
+  bottom: "hash_s45"
+  bottom: "hash_s46"
+  bottom: "hash_s47"
+  bottom: "hash_s48"
+  top: "concat_s"
+  concat_param {
+    concat_dim: 1
+  }
+}
+#############################################################################
+
+
+layer {
+  name: "loss"
+  type: "TripletLoss"
+  bottom: "concat_s"
+  bottom: "label"
+  top: "loss"
+  triplet_loss_param {
+     margin: 4
+  }   
+}

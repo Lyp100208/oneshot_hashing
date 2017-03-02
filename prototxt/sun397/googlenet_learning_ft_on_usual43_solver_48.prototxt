@@ -1,0 +1,23 @@
+net: "./prototxt/sun397/googlenet_learning_ft_on_usual43_train_48.prototxt"
+test_iter: 8
+test_interval: 100
+base_lr: 0.00001 #0.001 
+momentum: 0.9
+weight_decay: 0.0005
+lr_policy: "step"
+gamma: 0.1
+stepsize: 6000 #2000 
+display: 100
+max_iter: 6000
+snapshot: 200
+snapshot_prefix: "./snapshot/sun397/googlenet_learning_ft_on_usual43_48/ft_usual43"
+solver_mode: GPU
+info {
+  type: "weight"
+  interval: 100
+}
+info {
+  type: "mean_train_loss"
+  interval: 100
+}
+

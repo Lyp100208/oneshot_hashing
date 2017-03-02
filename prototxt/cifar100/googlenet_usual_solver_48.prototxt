@@ -1,0 +1,23 @@
+net: "./prototxt/cifar100/googlenet_inner_usual_train_48.prototxt"
+test_iter: 40
+test_interval: 100
+base_lr: 0.001 #0.001 
+momentum: 0.9
+weight_decay: 0.0005
+lr_policy: "step"
+gamma: 0.1
+stepsize: 60000
+display: 100
+max_iter: 200000
+snapshot: 20000
+snapshot_prefix: "./snapshot/cifar100/googlenet_usual_48/usual48_inner"
+solver_mode: GPU
+info {
+  type: "weight"
+  interval: 100
+}
+info {
+  type: "mean_train_loss"
+  interval: 100
+}
+

@@ -1,0 +1,77 @@
+ilsvrc2012 support_oneshot_fine_48 stepsize60000 map: 0.349985668499
+cifar100 support_learning_fine_48 map: 0.420094444478
+ilsvrc2012 support_oneshot_fine_bilstm_48 map: 0.367848560812
+ilsvrc2012 support_oneshot_fine_bilstm_noshare_48 map: 0.359048372168
+ilsvrc2012 support_oneshot_fine_2lstm_noshare_48 map: 0.376288614309
+ilsvrc2012 support_oneshot_fine_2lstm_noshare_48 map: 0.376288614309
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.349103733209
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.349103733209
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.371662108629
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.371292982992
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.371292982992
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.356960523905
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.35012207291
+ilsvrc2012 support_oneshot_fine_m_48 map: 0.35012207291
+ilsvrc2012 support_oneshot_fine_2lstm_48 map: 0.393197422143
+ilsvrc2012 support_oneshot_fine_2lstm_48 map: 0.393197422143
+ilsvrc2012 support_oneshot_fine_2lstm_48 map: 0.400638088264
+ilsvrc2012 support_oneshot_fine_2lstm_48 map: 0.377491182211
+ilsvrc2012 support_oneshot_fine_2lstm_48 map: 0.374862418939
+ilsvrc2012 support_oneshot_fine_48 map: 0.0701465097093
+ilsvrc2012 support_oneshot_fine_48 map: 0.353785635709
+ilsvrc2012 support_oneshot_fine_bilstm_48 map: 0.370531218705
+ilsvrc2012 support_oneshot_fine_bilstm_noshare_48 map: 0.358469621827
+ilsvrc2012 support_oneshot_fine_bilstm*2_48 map: 0.406662275265
+ilsvrc2012 support_oneshot_fine_bilstm*2_48 map: 0.408195424404
+ilsvrc2012 support_oneshot_fine_bilstm*2_48 map: 0.411408239039
+ilsvrc2012 support_oneshot_fine_bilstm*2_48 map: 0.403982515019
+ilsvrc2012 support_oneshot_fine_bilstm*2_48 map: 0.409922066221
+ilsvrc2012 support_oneshot_fine_bilstm_m_48 map: 0.368975690522
+ilsvrc2012 support_oneshot_fine_bilstm_m_48 map: 0.368975690522
+ilsvrc2012 support_oneshot_fine_bilstm_m_48 map: 0.370606652889
+ilsvrc2012 support_oneshot_fine_bilstm_m_48 map: 0.370677190788
+cifar100 support_oneshot_fine_stepsize30000_48 map: 0.400691648741
+cifar100 support_oneshot_fine_stepsize30000_48 map: 0.359713775392
+cifar100 support_oneshot_fine_stepsize30000_48 map: 0.359713775392
+cifar100 support_oneshot_fine_stepsize30000_48 map: 0.354246148236
+cifar100 support_oneshot_fine_stepsize30000_48 map: 0.355546643757
+cifar100 support_oneshot_fine_stepsize60000_48 map: 0.383822978035
+cifar100 support_feature_oneshot_fine_stepsize60000_48 map: 0.356396099203
+cifar100 googlenet_usual_48 map: 0.485362573609
+cifar100 googlenet_usual_48 map: 0.48628396994
+cifar100 iter=140000 googlenet_inner_usual_48 map: 0.732794992478
+cifar100 iter=80000 googlenet_inner_usual_48 map: 0.728328421996
+cifar100 iter=180000 googlenet_inner_usual_48 map: 0.733311974902
+cifar100 iter=200000 googlenet_inner_usual_48 map: 0.73143774619
+cifar100 old_oneshot_db_query(200,30)support_oneshot_fine_48 map: 0.238374631501
+cifar100 old_oneshot_db_query(200,30) usual_and_oneshot_48 map: 0.182685262954
+cifar100  support_learnt_48 map: 0.817265699463
+ilsvrc2012 iter=30000  googlenet_inner_usual_48 map: 0.883146945283
+ilsvrc2012 iter=100000  googlenet_inner_usual_48 map: 0.879027360002
+ilsvrc2012 iter=200000  googlenet_inner_usual_48 map: 0.878837373069
+ilsvrc2012 iter=140000  googlenet_inner_usual_48 map: 0.877885627604,0.885970537282
+cifar100 iter=200000  googlenet_usual90_and_learning_48 对learning : map: 0.407390959934
+cifar100 iter=200000  googlenet_usual90_and_learning_48 对learning : map: 0.407390959934
+cifar100 iter=200000  googlenet_usual90_and_learning_48 对learning : map: 0.410314061085
+cifar100 iter=180000  googlenet_usual90_and_learning_48 对learning : map: 0.406377984798
+ilsvrc2012 iter=200000  googlenet_usual90_and_learning_48 对learning : map: 0.564220129818
+ilsvrc2012 iter=200000  googlenet_usual90_and_learning_48 对usual90 : map: 0.853627550951
+ciafr100 iter=6000  googlenet_learning_ft_on_usual90_48 对learning_query和learning_db : map: 0.468119447312
+ilsvrc2012 iter=6000  googlenet_learning_ft_on_usual90_48 对learning_query和learning_db : map: 0.645082098248
+ilsvrc2012 iter=6000  googlenet_learning_ft_on_usual90_48 对learning_query和learning_db : map: 0.64652902566
+cifar100 iter=200000  googlenet_support40_learnt_bilstm_48 对learnt : map: 0.948197202304
+cifar100 iter=200000,stepsize=60000,max_iter=200000,  googlenet_support40_learnt_bilstm_48 对learnt : map: 0.945870876647
+ilsvrc2012 iter=200000,stepsize=30000,learning_rate=0.01,  googlenet_support40_learnt_bilstm_48 对learnt : map: 0.938724524431
+ilsvrc2012 iter=200000,stepsize=30000,learning_rate=0.01,  googlenet_support40_learnt_bilstm_48 对learnt : map: 0.964349274708
+cifar100 iter=6000,stepsize=6000,learning_rate=0.0001,  googlenet_learning_ft_on_learnt_48 对learning_db_query : map: 0.402365234039
+cifar100 iter=12000,stepsize=6000,learning_rate=0.0001,  googlenet_learning_ft_on_learnt_48 对learning_db_query : map: 0.398871299837
+cifar100 iter=12000,stepsize=6000,learning_rate=0.0001,  googlenet_learning_ft_on_learnt_48 对learning_db_query : map: 0.393760545337
+ilsvrc2012 iter=200000,stepsize=60000,learning_rate=0.01,  googlenet_support40_learnt_bilstm_48 对learnt : map: 0.972097841617
+cifar100 iter=12000,stepsize=6000,learning_rate=0.00001,  googlenet_learning_ft_on_learnt_48 : map: 0.389128490594
+ilsvrc2012 iter=6000,stepsize=6000,learning_rate=0.0001,  googlenet_learning_ft_on_learnt_48 : map: 0.597706776316
+sun397 iter=6000,stepsize=2000,learning_rate=0.001,  googlenet_usual43_48 : map: 0.82403232461
+sun397 iter=120000,stepsize=30000,learning_rate=0.001,  googlenet_usual43_and_learning_48 : map: 0.65233525271
+sun397 iter=120000,stepsize=30000,learning_rate=0.001,  googlenet_usual43_and_learning_48 : map: 0.65233525271
+sun397 iter=120000,stepsize=30000,learning_rate=0.001,  googlenet_usual43_and_learning_48 : map: 0.686947442431
+sun397 iter=6000,stepsize=6000,learning_rate=0.00001,  googlenet_learning_ft_on_usual43_48 : map: 0.700276646313
+sun397 iter=120000,stepsize=30000,learning_rate=0.001,  googlenet_usual43_and_learning_48 :对usual43: map: 0.837693534673
